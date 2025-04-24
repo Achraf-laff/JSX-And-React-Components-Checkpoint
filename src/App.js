@@ -1,42 +1,41 @@
-import React, { useState } from "react";
-import { Card, Container, Alert, Form } from "react-bootstrap";
+import React from "react";
+import { Card, Container, Form, Button } from "react-bootstrap";
 import Name from "./components/Name";
 import Price from "./components/Price";
 import Description from "./components/Description";
 import Image from "./components/Image";
 
 function App() {
-  const [firstName, setFirstName] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  const isValidName = (name) => {
-    const trimmed = name.trim();
-    return trimmed !== "" && trimmed !== ".";
-  };
+    const input = document.getElementById("nameInput").value;
+    const greeting = document.getElementById("greeting");
+    const image = document.getElementById("hello-img");
 
-  const handleNameSubmit = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      setSubmitted(true);
+    if (input && input !== "." && isNaN(Number(input)) === true) {
+      greeting.innerText = "Hello, " + input + "!";
+      image.style.display = "block";
+    } else {
+      greeting.innerText = "Hello, there!";
+      image.style.display = "none";
     }
   };
 
   return (
     <Container className="mt-5 d-flex flex-column align-items-center">
-      {/* Alert with name input */}
-      <Alert variant="info" className="w-100 text-center">
-        <p className="mb-2">Write your first name here:</p>
-        <Form.Control
-          type="text"
-          placeholder="Your name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          onKeyDown={handleNameSubmit}
-          style={{ maxWidth: "300px", margin: "0 auto" }}
-        />
-      </Alert>
+      <Form
+        className="mb-4 w-100 text-center"
+        onSubmit={handleSubmit}
+        style={{ maxWidth: "300px" }}
+      >
+        <Form.Label>Write your first name here:</Form.Label>
+        <Form.Control type="text" id="nameInput" placeholder="Your name" />
+        <Button className="mt-2" variant="primary" type="submit">
+          Submit
+        </Button>
+      </Form>
 
-      {/* Card with product info */}
       <Card style={{ width: "22rem", boxShadow: "0 4px 10px rgba(0,0,0,0.2)" }}>
         <Card.Body className="text-center">
           <Image />
@@ -46,24 +45,14 @@ function App() {
         </Card.Body>
       </Card>
 
-      {/* Greeting and Image */}
       <div className="mt-4 text-center">
-        {submitted && (
-          <>
-            <h4>
-              {isValidName(firstName)
-                ? `Hello, ${firstName.trim()}!`
-                : "Hello, there!"}
-            </h4>
-            {isValidName(firstName) && (
-              <img
-                src="https://lh3.googleusercontent.com/proxy/XjebavhBPlwTwKSl4TUs7GBzfv-OQx-8goNcpRgD5lhiEofhWq1nmGXic9y3jQWybUyfD2JCpk7cZAANaKYTVToSiWBdWKJpsl-R"
-                alt="Hello"
-                style={{ width: "300px", marginTop: "10px" }}
-              />
-            )}
-          </>
-        )}
+        <h4 id="greeting"></h4>
+        <img
+          id="hello-img"
+          src="https://lh3.googleusercontent.com/proxy/XjebavhBPlwTwKSl4TUs7GBzfv-OQx-8goNcpRgD5lhiEofhWq1nmGXic9y3jQWybUyfD2JCpk7cZAANaKYTVToSiWBdWKJpsl-R"
+          alt="Hello"
+          style={{ width: "150px", marginTop: "10px", display: "none" }}
+        />
       </div>
     </Container>
   );
